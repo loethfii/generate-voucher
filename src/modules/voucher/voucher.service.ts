@@ -80,9 +80,19 @@ export class VoucherService {
   }
 
   async updateVoucherCode(voucher_id: string, body: UpdateVoucher) {
-    console.log(voucher_id);
     const data = await this.prisma.$transaction(
       async (tx) => {
+        const checkVoucher = await tx.master_voucher.findUnique({
+          where: {
+            id: voucher_id,
+          },
+        });
+        if (!checkVoucher) {
+          throw new HttpException(
+            'id voucher not found',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
         const updateVoucherCode = await tx.master_voucher.update({
           where: {
             id: voucher_id,
@@ -96,7 +106,10 @@ export class VoucherService {
         });
 
         if (!updateVoucherCode) {
-          throw new BadRequestException('Failed to generate voucher');
+          throw new HttpException(
+            'Failed to update voucher code',
+            HttpStatus.BAD_REQUEST,
+          );
         }
 
         const countVoucherUvc = await tx.uvcvoucher.count({
