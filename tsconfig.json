@@ -11,6 +11,11 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strictPropertyInitialization": false,
+
+    "strict": true,
+    "lib": ["esnext"],
+    "esModuleInterop": true
   }
 }

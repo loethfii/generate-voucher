@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model master_voucher {
+  id         String       @id(map: "master_voucher_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String?      @db.VarChar(100)
+  start_date DateTime?    @db.Date
+  end_date   DateTime?    @db.Date
+  amount     Float?
+  created_at DateTime     @default(now()) @db.Timestamptz(6)
+  updated_at DateTime     @default(now()) @db.Timestamptz(6)
+  uvcvoucher uvcvoucher[]
+}
+
+model uvcvoucher {
+  id             String          @id(map: "uvcvoucher_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  voucher_id     String?         @db.Uuid
+  code           String          @unique(map: "uvcvoucher_unique") @db.VarChar(255)
+  created_at     DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime        @default(now()) @db.Timestamptz(6)
+  master_voucher master_voucher? @relation(fields: [voucher_id], references: [id], onDelete: Cascade, map: "uvcvoucher_master_voucher_fk")
+}
