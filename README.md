@@ -30,6 +30,7 @@
 
 ```bash
 $ npm install
+$ npx prisma db push
 ```
 
 ## Running the app
@@ -38,7 +39,7 @@ $ npm install
 # development
 $ npm run start
 
-# watch mode
+# watch mode and pull schema db from database
 $ npm run start:dev
 
 # production mode
