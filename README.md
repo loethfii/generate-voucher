@@ -177,3 +177,30 @@ curl --location --request PATCH 'http://localhost:3000/api/v1/voucher/update/2b9
         }
     }
 ```
+
+### DDL 
+```sql
+CREATE TABLE public.master_voucher (
+	id uuid DEFAULT gen_random_uuid() NOT NULL,
+	name varchar(100) NULL,
+	start_date date NULL,
+	end_date date NULL,
+	amount float8 NULL,
+	created_at timestamptz DEFAULT now() NOT NULL,
+	updated_at timestamptz DEFAULT now() NOT NULL,
+	CONSTRAINT master_voucher_pk PRIMARY KEY (id)
+);
+```
+
+```sql
+CREATE TABLE public.uvcvoucher (
+	id uuid DEFAULT gen_random_uuid() NOT NULL,
+	voucher_id uuid NULL,
+	code varchar(255) NOT NULL,
+	created_at timestamptz DEFAULT now() NOT NULL,
+	updated_at timestamptz DEFAULT now() NOT NULL,
+	CONSTRAINT uvcvoucher_pk PRIMARY KEY (id),
+	CONSTRAINT uvcvoucher_unique UNIQUE (code),
+	CONSTRAINT uvcvoucher_master_voucher_fk FOREIGN KEY (voucher_id) REFERENCES public.master_voucher(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+```
